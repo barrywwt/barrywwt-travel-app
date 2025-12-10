@@ -1,368 +1,352 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-HK">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2299.77">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我的旅程 App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cathay: {
+                            DEFAULT: '#006B5E', // 國泰綠
+                            light: '#E0F2F1',
+                        },
+                        muji: {
+                            bg: '#F7F3E8',      // 米色背景
+                            text: '#4A4A4A',    // 深灰文字
+                            card: '#FFFFFF'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 隱藏滾動條但保持功能 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* 模擬手機外框 (在桌面上看時) */
+        body { background-color: #e5e5e5; }
+        #app {
+            max-width: 430px; /* iPhone Pro Max 寬度 */
+            margin: 0 auto;
+            min-height: 100vh;
+            background-color: #F7F3E8;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
-<body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="zh-HK"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;我的旅程 App&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://unpkg.com/vue@3/dist/vue.global.js"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>tailwind.config = {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>theme: {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>extend: {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>colors: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>cathay: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>DEFAULT: '#006B5E', // 國泰綠</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>light: '#E0F2F1',</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>muji: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>bg: '#F7F3E8',<span class="Apple-converted-space">      </span>// 米色背景</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>text: '#4A4A4A',<span class="Apple-converted-space">    </span>// 深灰文字</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>card: '#FFFFFF'</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* 隱藏滾動條但保持功能 */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.no-scrollbar::-webkit-scrollbar { display: none; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* 模擬手機外框 (在桌面上看時) */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>body { background-color: #e5e5e5; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#app {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-width: 430px; /* iPhone Pro Max 寬度 */</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>min-height: 100vh;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #F7F3E8;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 0 20px rgba(0,0,0,0.1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body class="text-gray-700 antialiased font-sans"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="app" class="flex flex-col h-screen"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;header class="bg-white px-6 py-4 shadow-sm z-10 sticky top-0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex justify-between items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h1 class="text-xl font-bold text-cathay"&gt;{{ currentTabName }}&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-xs text-gray-400"&gt;Tokyo Trip 2025&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="w-8 h-8 rounded-full bg-cathay text-white flex items-center justify-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;i class="fa-solid fa-plane"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;main class="flex-1 overflow-y-auto p-4 pb-24 no-scrollbar"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div v-if="activeTab === 'itinerary'" class="space-y-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div v-for="(day, index) in itinerary" :key="index" class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-cathay relative overflow-hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-start mb-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="font-bold text-lg text-muji-text"&gt;{{ day.date }}&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-lg"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i :class="day.weatherIcon" class="mr-1 text-cathay"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>{{ day.weather }}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;ul class="space-y-3 mt-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li v-for="event in day.events" class="flex items-center text-sm text-gray-600"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fa-regular fa-circle-check text-cathay mr-3 text-xs"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>{{ event }}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/ul&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div v-if="activeTab === 'map'" class="space-y-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-2xl p-5 shadow-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;label class="text-xs font-bold text-cathay uppercase tracking-wider mb-2 block"&gt;尋找地點&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input v-model="mapSearchQuery" type="text" placeholder="輸入地點 (例: 東京鐵塔)"<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                               </span>class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-cathay transition"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button @click="openGoogleMapsSearch" class="bg-cathay text-white px-4 rounded-lg"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fa-solid fa-magnifying-glass"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-2xl p-5 shadow-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="font-bold text-muji-text mb-3"&gt;一鍵導航&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="grid grid-cols-2 gap-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button @click="directNavigate('酒店')" class="border border-cathay text-cathay py-3 rounded-xl text-sm font-medium hover:bg-cathay-light transition flex items-center justify-center gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fa-solid fa-hotel"&gt;&lt;/i&gt; 回酒店</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button @click="directNavigate('機場')" class="border border-cathay text-cathay py-3 rounded-xl text-sm font-medium hover:bg-cathay-light transition flex items-center justify-center gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fa-solid fa-plane-departure"&gt;&lt;/i&gt; 去機場</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="h-64 bg-gray-200 rounded-2xl flex items-center justify-center text-gray-400 relative overflow-hidden group cursor-pointer" @click="openGoogleMapsSearch"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                   </span>&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Google_Maps_Logo_2020.svg/512px-Google_Maps_Logo_2020.svg.png" class="w-16 h-16 opacity-50 mb-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                   </span>&lt;p class="absolute bottom-4 text-xs font-bold"&gt;點擊開啟 Google Maps App&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div v-if="activeTab === 'accounting'" class="space-y-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-2xl p-5 shadow-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="font-bold text-muji-text mb-4"&gt;新增支出&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="space-y-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input v-model="newExpense.item" placeholder="項目名稱 (例: 拉麵)" class="w-full bg-gray-50 border-0 rounded-lg p-3 text-sm"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                        </span></p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex gap-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;input v-model.number="newExpense.amount" type="number" placeholder="金額" class="w-2/3 bg-gray-50 border-0 rounded-lg p-3 text-sm"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                            </span></p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;select v-model="newExpense.method" class="w-1/3 bg-gray-50 border-0 rounded-lg p-3 text-sm text-gray-600"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option value="現金"&gt;現金&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option value="信用卡"&gt;信用卡&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option value="提款卡"&gt;提款卡&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button @click="addExpense" class="w-full bg-cathay text-white py-3 rounded-xl shadow-lg shadow-cathay/30 font-medium active:scale-95 transition"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>記下一筆</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-2xl p-5 shadow-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-center mb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="font-bold text-muji-text"&gt;消費紀錄&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="text-cathay font-bold text-lg"&gt;${{ totalExpense }}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                    </span></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div v-if="expenses.length === 0" class="text-center text-gray-400 text-sm py-4"&gt;暫無資料&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                    </span></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;ul class="divide-y divide-gray-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li v-for="(exp, i) in expenses" :key="i" class="py-3 flex justify-between items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="text-sm font-medium text-gray-800"&gt;{{ exp.item }}&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="text-xs text-white px-2 py-0.5 rounded-full"<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                                      </span>:class="{'bg-green-500': exp.method==='現金', 'bg-blue-500': exp.method==='信用卡', 'bg-purple-500': exp.method==='提款卡'}"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>{{ exp.method }}</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="font-mono text-gray-600"&gt;${{ exp.amount }}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/ul&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div v-if="activeTab === 'shopping'" class="space-y-4"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex bg-white p-1 rounded-xl shadow-sm mb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button @click="listMode = 'buy'" :class="{'bg-cathay text-white shadow-md': listMode === 'buy', 'text-gray-500': listMode !== 'buy'}" class="flex-1 py-2 rounded-lg text-sm font-medium transition-all"&gt;購物清單&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button @click="listMode = 'pack'" :class="{'bg-cathay text-white shadow-md': listMode === 'pack', 'text-gray-500': listMode !== 'pack'}" class="flex-1 py-2 rounded-lg text-sm font-medium transition-all"&gt;行李核對&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div v-if="listMode === 'buy'" class="bg-white rounded-2xl p-5 shadow-sm min-h-[300px]"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex gap-2 mb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input v-model="newItem" @keyup.enter="addShopItem" placeholder="想買什麼..." class="flex-1 bg-gray-50 border-0 rounded-lg p-3 text-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button @click="addShopItem" class="bg-cathay text-white w-10 rounded-lg flex items-center justify-center"&gt;&lt;i class="fa-solid fa-plus"&gt;&lt;/i&gt;&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;ul class="space-y-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li v-for="(item, i) in shoppingList" :key="i" class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;input type="checkbox" v-model="item.done" class="w-5 h-5 accent-cathay rounded cursor-pointer"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span :class="{'line-through text-gray-300': item.done}" class="text-gray-700"&gt;{{ item.name }}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/ul&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div v-if="listMode === 'pack'" class="bg-white rounded-2xl p-5 shadow-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="font-bold text-muji-text mb-3"&gt;出發前檢查&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="space-y-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div v-for="(category, catName) in packingList" :key="catName"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h4 class="text-xs font-bold text-cathay uppercase mb-2"&gt;{{ catName }}&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="grid grid-cols-2 gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div v-for="(item, i) in category" :key="i"<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                                     </span>@click="item.checked = !item.checked"</p>
-<p class="p1"><span class="Apple-converted-space">                                     </span>:class="{'bg-cathay text-white': item.checked, 'bg-gray-50 text-gray-600': !item.checked}"</p>
-<p class="p1"><span class="Apple-converted-space">                                     </span>class="p-3 rounded-xl text-sm cursor-pointer transition-all duration-200 flex items-center justify-between shadow-sm border border-transparent select-none"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>{{ item.name }}</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;i v-if="item.checked" class="fa-solid fa-check text-xs"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div v-if="activeTab === 'hotel'" class="space-y-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-2xl overflow-hidden shadow-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=1000&amp;q=80" class="w-full h-48 object-cover"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="p-5"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h2 class="text-xl font-bold text-muji-text"&gt;無印銀座飯店&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-sm text-gray-500 mb-4"&gt;Tokyo, Ginza&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                        </span></p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="grid grid-cols-2 gap-4 mb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="bg-gray-50 p-3 rounded-xl text-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="text-xs text-gray-400"&gt;Check-in&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="font-bold text-cathay"&gt;15:00&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="bg-gray-50 p-3 rounded-xl text-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="text-xs text-gray-400"&gt;Check-out&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="font-bold text-cathay"&gt;11:00&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="space-y-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;button @click="directNavigate('Muji Hotel Ginza')" class="w-full bg-cathay text-white py-3 rounded-xl flex items-center justify-center gap-2 font-medium"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa-solid fa-location-arrow"&gt;&lt;/i&gt; 導航至飯店</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;a href="tel:+81312345678" class="block w-full bg-white border border-gray-200 text-gray-600 py-3 rounded-xl flex items-center justify-center gap-2 font-medium"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa-solid fa-phone"&gt;&lt;/i&gt; 撥打電話</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/main&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;nav class="bg-white border-t border-gray-100 px-6 py-3 flex justify-between items-center text-xs font-medium z-20 pb-safe"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button @click="activeTab = 'itinerary'" :class="activeTab === 'itinerary' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fa-solid fa-calendar-days text-xl"&gt;&lt;/i&gt; 行程</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button @click="activeTab = 'map'" :class="activeTab === 'map' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fa-solid fa-map-location-dot text-xl"&gt;&lt;/i&gt; 地圖</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button @click="activeTab = 'accounting'" :class="activeTab === 'accounting' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-cathay/10 w-10 h-10 rounded-full flex items-center justify-center mb-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;i class="fa-solid fa-yen-sign text-lg" :class="activeTab === 'accounting' ? 'text-cathay' : 'text-gray-400'"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button @click="activeTab = 'shopping'" :class="activeTab === 'shopping' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fa-solid fa-bag-shopping text-xl"&gt;&lt;/i&gt; 購物</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button @click="activeTab = 'hotel'" :class="activeTab === 'hotel' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fa-solid fa-bed text-xl"&gt;&lt;/i&gt; 住宿</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/nav&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const { createApp, ref, computed } = Vue;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>createApp({</p>
-<p class="p1"><span class="Apple-converted-space">            </span>setup() {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const activeTab = ref('itinerary');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const listMode = ref('buy'); // 'buy' or 'pack'</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const mapSearchQuery = ref('');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>// 1. 行程表數據 (包含天氣)</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const itinerary = ref([</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ date: 'Day 1 (10/12)', weather: '24°C 晴', weatherIcon: 'fa-solid fa-sun', events: ['10:00 抵達東京成田機場', '13:00 飯店 Check-in', '15:00 銀座逛街', '19:00 燒肉晚餐'] },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ date: 'Day 2 (11/12)', weather: '21°C 雨', weatherIcon: 'fa-solid fa-cloud-rain', events: ['09:00 迪士尼樂園', '18:00 園區晚餐', '21:00 觀賞煙火'] },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ date: 'Day 3 (12/12)', weather: '22°C 陰', weatherIcon: 'fa-solid fa-cloud', events: ['10:00 淺草寺參拜', '12:00 晴空塔午餐', '16:00 秋葉原購物'] },</p>
-<p class="p1"><span class="Apple-converted-space">                </span>]);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>// 3. 記帳功能</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const newExpense = ref({ item: '', amount: '', method: '現金' });</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const expenses = ref([</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ item: '便利商店', amount: 850, method: '現金' },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ item: 'Uniqlo', amount: 5000, method: '信用卡' },</p>
-<p class="p1"><span class="Apple-converted-space">                </span>]);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const totalExpense = computed(() =&gt; expenses.value.reduce((sum, item) =&gt; sum + Number(item.amount), 0));</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>const addExpense = () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>if(newExpense.value.item &amp;&amp; newExpense.value.amount) {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>expenses.value.push({ ...newExpense.value });</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>newExpense.value.item = '';</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>newExpense.value.amount = '';</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>// 4. 購物清單</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const newItem = ref('');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const shoppingList = ref([</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ name: '美妝藥品', done: false },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ name: '抹茶粉', done: true },</p>
-<p class="p1"><span class="Apple-converted-space">                </span>]);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const addShopItem = () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>if(newItem.value) {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>shoppingList.value.push({ name: newItem.value, done: false });</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>newItem.value = '';</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>// 4-1. 旅行用品清單 (分類核對)</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const packingList = ref({</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>'證件錢包': [</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>{ name: '護照', checked: false },</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>{ name: '現金/日幣', checked: false },</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>{ name: '信用卡', checked: false },</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>{ name: 'Sim 卡', checked: false },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>],</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>'電子產品': [</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>{ name: '充電器', checked: false },</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>{ name: '轉接頭', checked: false },</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>{ name: '行動電源', checked: false },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>],</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>'生活用品': [</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>{ name: '牙刷', checked: false },</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>{ name: '換洗衣物', checked: false },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>]</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>// Google Maps 功能</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const openGoogleMapsSearch = () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const query = mapSearchQuery.value || '東京';</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>// 使用 universal link 開啟 App</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>window.location.href = `https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(query)}`;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>const directNavigate = (destination) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>// 這裏直接開啟 Google Maps 導航模式</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>let query = destination;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>if(destination === '酒店') query = 'Muji Hotel Ginza'; // 預設酒店地址</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>if(destination === '機場') query = 'Narita International Airport';</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>window.location.href = `https://www.google.com/maps/dir/?api=1&amp;destination=${encodeURIComponent(query)}`;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>const currentTabName = computed(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const names = {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>'itinerary': '行程總覽',</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>'map': '地圖導航',</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>'accounting': '旅費記帳',</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>'shopping': '購物與行李',</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>'hotel': '住宿資訊'</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>};</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>return names[activeTab.value];</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>return {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>activeTab, currentTabName,</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>itinerary,</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>newExpense, expenses, addExpense, totalExpense,</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>listMode, newItem, shoppingList, addShopItem, packingList,</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>mapSearchQuery, openGoogleMapsSearch, directNavigate</p>
-<p class="p1"><span class="Apple-converted-space">                </span>};</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}).mount('#app');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+<body class="text-gray-700 antialiased font-sans">
+
+    <div id="app" class="flex flex-col h-screen">
+
+        <header class="bg-white px-6 py-4 shadow-sm z-10 sticky top-0">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-xl font-bold text-cathay">{{ currentTabName }}</h1>
+                    <p class="text-xs text-gray-400">Tokyo Trip 2025</p>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-cathay text-white flex items-center justify-center">
+                    <i class="fa-solid fa-plane"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 pb-24 no-scrollbar">
+
+            <div v-if="activeTab === 'itinerary'" class="space-y-4">
+                <div v-for="(day, index) in itinerary" :key="index" class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-cathay relative overflow-hidden">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-lg text-muji-text">{{ day.date }}</h3>
+                        <div class="flex items-center text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-lg">
+                            <i :class="day.weatherIcon" class="mr-1 text-cathay"></i>
+                            {{ day.weather }}
+                        </div>
+                    </div>
+                    <ul class="space-y-3 mt-3">
+                        <li v-for="event in day.events" class="flex items-center text-sm text-gray-600">
+                            <i class="fa-regular fa-circle-check text-cathay mr-3 text-xs"></i>
+                            {{ event }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div v-if="activeTab === 'map'" class="space-y-4">
+                <div class="bg-white rounded-2xl p-5 shadow-sm">
+                    <label class="text-xs font-bold text-cathay uppercase tracking-wider mb-2 block">尋找地點</label>
+                    <div class="flex gap-2">
+                        <input v-model="mapSearchQuery" type="text" placeholder="輸入地點 (例: 東京鐵塔)" 
+                               class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-cathay transition">
+                        <button @click="openGoogleMapsSearch" class="bg-cathay text-white px-4 rounded-lg">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-muji-text mb-3">一鍵導航</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button @click="directNavigate('酒店')" class="border border-cathay text-cathay py-3 rounded-xl text-sm font-medium hover:bg-cathay-light transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-hotel"></i> 回酒店
+                        </button>
+                        <button @click="directNavigate('機場')" class="border border-cathay text-cathay py-3 rounded-xl text-sm font-medium hover:bg-cathay-light transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-plane-departure"></i> 去機場
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="h-64 bg-gray-200 rounded-2xl flex items-center justify-center text-gray-400 relative overflow-hidden group cursor-pointer" @click="openGoogleMapsSearch">
+                   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Google_Maps_Logo_2020.svg/512px-Google_Maps_Logo_2020.svg.png" class="w-16 h-16 opacity-50 mb-2">
+                   <p class="absolute bottom-4 text-xs font-bold">點擊開啟 Google Maps App</p>
+                </div>
+            </div>
+
+            <div v-if="activeTab === 'accounting'" class="space-y-4">
+                <div class="bg-white rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-muji-text mb-4">新增支出</h3>
+                    <div class="space-y-3">
+                        <input v-model="newExpense.item" placeholder="項目名稱 (例: 拉麵)" class="w-full bg-gray-50 border-0 rounded-lg p-3 text-sm">
+                        
+                        <div class="flex gap-3">
+                            <input v-model.number="newExpense.amount" type="number" placeholder="金額" class="w-2/3 bg-gray-50 border-0 rounded-lg p-3 text-sm">
+                            
+                            <select v-model="newExpense.method" class="w-1/3 bg-gray-50 border-0 rounded-lg p-3 text-sm text-gray-600">
+                                <option value="現金">現金</option>
+                                <option value="信用卡">信用卡</option>
+                                <option value="提款卡">提款卡</option>
+                            </select>
+                        </div>
+
+                        <button @click="addExpense" class="w-full bg-cathay text-white py-3 rounded-xl shadow-lg shadow-cathay/30 font-medium active:scale-95 transition">
+                            記下一筆
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-muji-text">消費紀錄</h3>
+                        <span class="text-cathay font-bold text-lg">${{ totalExpense }}</span>
+                    </div>
+                    
+                    <div v-if="expenses.length === 0" class="text-center text-gray-400 text-sm py-4">暫無資料</div>
+                    
+                    <ul class="divide-y divide-gray-100">
+                        <li v-for="(exp, i) in expenses" :key="i" class="py-3 flex justify-between items-center">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">{{ exp.item }}</p>
+                                <span class="text-xs text-white px-2 py-0.5 rounded-full" 
+                                      :class="{'bg-green-500': exp.method==='現金', 'bg-blue-500': exp.method==='信用卡', 'bg-purple-500': exp.method==='提款卡'}">
+                                    {{ exp.method }}
+                                </span>
+                            </div>
+                            <span class="font-mono text-gray-600">${{ exp.amount }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div v-if="activeTab === 'shopping'" class="space-y-4">
+                
+                <div class="flex bg-white p-1 rounded-xl shadow-sm mb-4">
+                    <button @click="listMode = 'buy'" :class="{'bg-cathay text-white shadow-md': listMode === 'buy', 'text-gray-500': listMode !== 'buy'}" class="flex-1 py-2 rounded-lg text-sm font-medium transition-all">購物清單</button>
+                    <button @click="listMode = 'pack'" :class="{'bg-cathay text-white shadow-md': listMode === 'pack', 'text-gray-500': listMode !== 'pack'}" class="flex-1 py-2 rounded-lg text-sm font-medium transition-all">行李核對</button>
+                </div>
+
+                <div v-if="listMode === 'buy'" class="bg-white rounded-2xl p-5 shadow-sm min-h-[300px]">
+                    <div class="flex gap-2 mb-4">
+                        <input v-model="newItem" @keyup.enter="addShopItem" placeholder="想買什麼..." class="flex-1 bg-gray-50 border-0 rounded-lg p-3 text-sm">
+                        <button @click="addShopItem" class="bg-cathay text-white w-10 rounded-lg flex items-center justify-center"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <ul class="space-y-2">
+                        <li v-for="(item, i) in shoppingList" :key="i" class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg">
+                            <input type="checkbox" v-model="item.done" class="w-5 h-5 accent-cathay rounded cursor-pointer">
+                            <span :class="{'line-through text-gray-300': item.done}" class="text-gray-700">{{ item.name }}</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div v-if="listMode === 'pack'" class="bg-white rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-muji-text mb-3">出發前檢查</h3>
+                    <div class="space-y-4">
+                        <div v-for="(category, catName) in packingList" :key="catName">
+                            <h4 class="text-xs font-bold text-cathay uppercase mb-2">{{ catName }}</h4>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div v-for="(item, i) in category" :key="i" 
+                                     @click="item.checked = !item.checked"
+                                     :class="{'bg-cathay text-white': item.checked, 'bg-gray-50 text-gray-600': !item.checked}"
+                                     class="p-3 rounded-xl text-sm cursor-pointer transition-all duration-200 flex items-center justify-between shadow-sm border border-transparent select-none">
+                                    {{ item.name }}
+                                    <i v-if="item.checked" class="fa-solid fa-check text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="activeTab === 'hotel'" class="space-y-4">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <h2 class="text-xl font-bold text-muji-text">無印銀座飯店</h2>
+                        <p class="text-sm text-gray-500 mb-4">Tokyo, Ginza</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="bg-gray-50 p-3 rounded-xl text-center">
+                                <p class="text-xs text-gray-400">Check-in</p>
+                                <p class="font-bold text-cathay">15:00</p>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded-xl text-center">
+                                <p class="text-xs text-gray-400">Check-out</p>
+                                <p class="font-bold text-cathay">11:00</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <button @click="directNavigate('Muji Hotel Ginza')" class="w-full bg-cathay text-white py-3 rounded-xl flex items-center justify-center gap-2 font-medium">
+                                <i class="fa-solid fa-location-arrow"></i> 導航至飯店
+                            </button>
+                            <a href="tel:+81312345678" class="block w-full bg-white border border-gray-200 text-gray-600 py-3 rounded-xl flex items-center justify-center gap-2 font-medium">
+                                <i class="fa-solid fa-phone"></i> 撥打電話
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <nav class="bg-white border-t border-gray-100 px-6 py-3 flex justify-between items-center text-xs font-medium z-20 pb-safe">
+            <button @click="activeTab = 'itinerary'" :class="activeTab === 'itinerary' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition">
+                <i class="fa-solid fa-calendar-days text-xl"></i> 行程
+            </button>
+            <button @click="activeTab = 'map'" :class="activeTab === 'map' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition">
+                <i class="fa-solid fa-map-location-dot text-xl"></i> 地圖
+            </button>
+            <button @click="activeTab = 'accounting'" :class="activeTab === 'accounting' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition">
+                <div class="bg-cathay/10 w-10 h-10 rounded-full flex items-center justify-center mb-1">
+                    <i class="fa-solid fa-yen-sign text-lg" :class="activeTab === 'accounting' ? 'text-cathay' : 'text-gray-400'"></i>
+                </div>
+            </button>
+            <button @click="activeTab = 'shopping'" :class="activeTab === 'shopping' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition">
+                <i class="fa-solid fa-bag-shopping text-xl"></i> 購物
+            </button>
+            <button @click="activeTab = 'hotel'" :class="activeTab === 'hotel' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition">
+                <i class="fa-solid fa-bed text-xl"></i> 住宿
+            </button>
+        </nav>
+
+    </div>
+
+    <script>
+        const { createApp, ref, computed } = Vue;
+
+        createApp({
+            setup() {
+                const activeTab = ref('itinerary');
+                const listMode = ref('buy'); // 'buy' or 'pack'
+                const mapSearchQuery = ref('');
+
+                // 1. 行程表數據 (包含天氣)
+                const itinerary = ref([
+                    { date: 'Day 1 (10/12)', weather: '24°C 晴', weatherIcon: 'fa-solid fa-sun', events: ['10:00 抵達東京成田機場', '13:00 飯店 Check-in', '15:00 銀座逛街', '19:00 燒肉晚餐'] },
+                    { date: 'Day 2 (11/12)', weather: '21°C 雨', weatherIcon: 'fa-solid fa-cloud-rain', events: ['09:00 迪士尼樂園', '18:00 園區晚餐', '21:00 觀賞煙火'] },
+                    { date: 'Day 3 (12/12)', weather: '22°C 陰', weatherIcon: 'fa-solid fa-cloud', events: ['10:00 淺草寺參拜', '12:00 晴空塔午餐', '16:00 秋葉原購物'] },
+                ]);
+
+                // 3. 記帳功能
+                const newExpense = ref({ item: '', amount: '', method: '現金' });
+                const expenses = ref([
+                    { item: '便利商店', amount: 850, method: '現金' },
+                    { item: 'Uniqlo', amount: 5000, method: '信用卡' },
+                ]);
+                const totalExpense = computed(() => expenses.value.reduce((sum, item) => sum + Number(item.amount), 0));
+                
+                const addExpense = () => {
+                    if(newExpense.value.item && newExpense.value.amount) {
+                        expenses.value.push({ ...newExpense.value });
+                        newExpense.value.item = '';
+                        newExpense.value.amount = '';
+                    }
+                };
+
+                // 4. 購物清單
+                const newItem = ref('');
+                const shoppingList = ref([
+                    { name: '美妝藥品', done: false },
+                    { name: '抹茶粉', done: true },
+                ]);
+                const addShopItem = () => {
+                    if(newItem.value) {
+                        shoppingList.value.push({ name: newItem.value, done: false });
+                        newItem.value = '';
+                    }
+                }
+
+                // 4-1. 旅行用品清單 (分類核對)
+                const packingList = ref({
+                    '證件錢包': [
+                        { name: '護照', checked: false },
+                        { name: '現金/日幣', checked: false },
+                        { name: '信用卡', checked: false },
+                        { name: 'Sim 卡', checked: false },
+                    ],
+                    '電子產品': [
+                        { name: '充電器', checked: false },
+                        { name: '轉接頭', checked: false },
+                        { name: '行動電源', checked: false },
+                    ],
+                    '生活用品': [
+                        { name: '牙刷', checked: false },
+                        { name: '換洗衣物', checked: false },
+                    ]
+                });
+
+                // Google Maps 功能
+                const openGoogleMapsSearch = () => {
+                    const query = mapSearchQuery.value || '東京';
+                    // 使用 universal link 開啟 App
+                    window.location.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+                };
+
+                const directNavigate = (destination) => {
+                    // 這裏直接開啟 Google Maps 導航模式
+                    let query = destination;
+                    if(destination === '酒店') query = 'Muji Hotel Ginza'; // 預設酒店地址
+                    if(destination === '機場') query = 'Narita International Airport';
+                    window.location.href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`;
+                }
+
+                const currentTabName = computed(() => {
+                    const names = {
+                        'itinerary': '行程總覽',
+                        'map': '地圖導航',
+                        'accounting': '旅費記帳',
+                        'shopping': '購物與行李',
+                        'hotel': '住宿資訊'
+                    };
+                    return names[activeTab.value];
+                });
+
+                return {
+                    activeTab, currentTabName,
+                    itinerary,
+                    newExpense, expenses, addExpense, totalExpense,
+                    listMode, newItem, shoppingList, addShopItem, packingList,
+                    mapSearchQuery, openGoogleMapsSearch, directNavigate
+                };
+            }
+        }).mount('#app');
+    </script>
 </body>
 </html>
