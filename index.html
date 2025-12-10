@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>我的旅程 App</title>
+    <title>旅程管家 Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,337 +13,451 @@
             theme: {
                 extend: {
                     colors: {
-                        cathay: {
-                            DEFAULT: '#006B5E', // 國泰綠
-                            light: '#E0F2F1',
-                        },
-                        muji: {
-                            bg: '#F7F3E8',      // 米色背景
-                            text: '#4A4A4A',    // 深灰文字
-                            card: '#FFFFFF'
-                        }
+                        cathay: { DEFAULT: '#006B5E', light: '#E0F2F1', dark: '#004d43' },
+                        muji: { bg: '#F7F3E8', text: '#4A4A4A', card: '#FFFFFF', border: '#E5E5E5' }
                     }
                 }
             }
         }
     </script>
     <style>
-        /* 隱藏滾動條但保持功能 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* 模擬手機外框 (在桌面上看時) */
         body { background-color: #e5e5e5; }
         #app {
-            max-width: 430px; /* iPhone Pro Max 寬度 */
-            margin: 0 auto;
-            min-height: 100vh;
-            background-color: #F7F3E8;
-            position: relative;
+            max-width: 430px; margin: 0 auto; min-height: 100vh;
+            background-color: #F7F3E8; position: relative;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
+        /* 橫向日曆選中樣式 */
+        .date-card-active { background-color: #006B5E; color: white; transform: scale(1.05); }
+        .date-card-inactive { background-color: white; color: #4A4A4A; }
     </style>
 </head>
 <body class="text-gray-700 antialiased font-sans">
 
     <div id="app" class="flex flex-col h-screen">
 
-        <header class="bg-white px-6 py-4 shadow-sm z-10 sticky top-0">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1 class="text-xl font-bold text-cathay">{{ currentTabName }}</h1>
-                    <p class="text-xs text-gray-400">Tokyo Trip 2025</p>
-                </div>
-                <div class="w-8 h-8 rounded-full bg-cathay text-white flex items-center justify-center">
-                    <i class="fa-solid fa-plane"></i>
-                </div>
+        <header class="bg-white px-5 py-4 shadow-sm z-20 flex justify-between items-center sticky top-0">
+            <div>
+                <h1 class="text-xl font-bold text-cathay">{{ currentTabName }}</h1>
+                <p v-if="currentTrip" class="text-xs text-gray-400 cursor-pointer" @click="showTripSettings = true">
+                    {{ currentTrip.name }} <i class="fa-solid fa-pen-to-square ml-1"></i>
+                </p>
+                <p v-else class="text-xs text-gray-400">請新增一個旅程</p>
             </div>
+            <button @click="showTripSettings = true" class="text-gray-400 hover:text-cathay transition">
+                <i class="fa-solid fa-gear text-lg"></i>
+            </button>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-4 pb-24 no-scrollbar">
+        <main class="flex-1 overflow-y-auto p-4 pb-24 no-scrollbar relative">
 
             <div v-if="activeTab === 'itinerary'" class="space-y-4">
-                <div v-for="(day, index) in itinerary" :key="index" class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-cathay relative overflow-hidden">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-bold text-lg text-muji-text">{{ day.date }}</h3>
-                        <div class="flex items-center text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-lg">
-                            <i :class="day.weatherIcon" class="mr-1 text-cathay"></i>
-                            {{ day.weather }}
+                
+                <div v-if="!currentTrip" class="text-center mt-20">
+                    <i class="fa-solid fa-plane-up text-4xl text-gray-300 mb-4"></i>
+                    <p class="mb-4 text-gray-500">還沒有旅程計畫</p>
+                    <button @click="showTripSettings = true" class="bg-cathay text-white px-6 py-2 rounded-full shadow-lg">建立新旅程</button>
+                </div>
+
+                <div v-else>
+                    <div class="flex overflow-x-auto space-x-3 pb-2 mb-2 no-scrollbar">
+                        <div v-for="(day, index) in tripDays" :key="index" 
+                             @click="selectedDate = day.dateStr"
+                             :class="selectedDate === day.dateStr ? 'date-card-active' : 'date-card-inactive'"
+                             class="flex-shrink-0 w-16 h-20 rounded-xl shadow-sm flex flex-col items-center justify-center transition-all cursor-pointer border border-gray-100">
+                            <span class="text-xs font-medium opacity-70">{{ day.weekDay }}</span>
+                            <span class="text-xl font-bold">{{ day.day }}</span>
                         </div>
                     </div>
-                    <ul class="space-y-3 mt-3">
-                        <li v-for="event in day.events" class="flex items-center text-sm text-gray-600">
-                            <i class="fa-regular fa-circle-check text-cathay mr-3 text-xs"></i>
-                            {{ event }}
-                        </li>
-                    </ul>
+
+                    <div class="bg-white rounded-2xl p-4 shadow-sm mb-4 border border-gray-100">
+                        <div class="flex justify-between items-center mb-3 pb-3 border-b border-gray-100">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-cloud-sun text-orange-400"></i>
+                                <span class="text-sm font-medium">東京: 22°C 晴</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-blue-600">
+                                <i class="fa-solid fa-train"></i>
+                                <span>交通順暢</span>
+                            </div>
+                        </div>
+
+                        <div v-if="currentTrip.flightCode" class="bg-cathay/5 rounded-xl p-3 relative overflow-hidden">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-cathay">{{ currentTrip.flightCode }}</span>
+                                <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">準時 On Time</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <div>
+                                    <p class="text-xs text-gray-400">登機門</p>
+                                    <p class="font-mono font-bold">23</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs text-gray-400">預計出發</p>
+                                    <p class="font-mono font-bold">10:35</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else class="text-center py-2" @click="showTripSettings = true">
+                            <p class="text-xs text-gray-400 underline cursor-pointer">點擊輸入航班代碼以顯示資訊</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-end mb-3">
+                            <h3 class="font-bold text-muji-text">今日安排</h3>
+                            <button @click="showAddEvent = true" class="text-cathay text-sm font-bold"><i class="fa-solid fa-plus"></i> 新增</button>
+                        </div>
+
+                        <div v-if="!currentDayEvents.length" class="text-center py-8 text-gray-400 text-sm bg-white rounded-2xl border-dashed border-2 border-gray-200">
+                            尚無行程，點擊新增
+                        </div>
+
+                        <div class="space-y-3">
+                            <div v-for="(event, idx) in currentDayEvents" :key="idx" class="bg-white p-4 rounded-xl shadow-sm flex gap-4 items-start relative group">
+                                <div class="text-center min-w-[50px]">
+                                    <div class="font-bold text-lg text-cathay">{{ event.time }}</div>
+                                </div>
+                                <div class="flex-1 border-l-2 border-gray-100 pl-4">
+                                    <h4 class="font-bold text-gray-800">{{ event.title }}</h4>
+                                    <p class="text-xs text-gray-500 mt-1">{{ event.note }}</p>
+                                </div>
+                                <button @click="deleteEvent(idx)" class="text-gray-300 hover:text-red-500 absolute top-4 right-4">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div v-if="activeTab === 'map'" class="space-y-4">
                 <div class="bg-white rounded-2xl p-5 shadow-sm">
-                    <label class="text-xs font-bold text-cathay uppercase tracking-wider mb-2 block">尋找地點</label>
+                    <label class="text-xs font-bold text-cathay uppercase tracking-wider mb-2 block">Google Maps 搜尋</label>
                     <div class="flex gap-2">
-                        <input v-model="mapSearchQuery" type="text" placeholder="輸入地點 (例: 東京鐵塔)" 
-                               class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-cathay transition">
-                        <button @click="openGoogleMapsSearch" class="bg-cathay text-white px-4 rounded-lg">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
+                        <input v-model="mapSearchQuery" type="text" placeholder="輸入地點..." class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:border-cathay outline-none">
+                        <button @click="openGoogleMaps" class="bg-cathay text-white px-4 rounded-lg"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
                 </div>
-
-                <div class="bg-white rounded-2xl p-5 shadow-sm">
-                    <h3 class="font-bold text-muji-text mb-3">一鍵導航</h3>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button @click="directNavigate('酒店')" class="border border-cathay text-cathay py-3 rounded-xl text-sm font-medium hover:bg-cathay-light transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-hotel"></i> 回酒店
-                        </button>
-                        <button @click="directNavigate('機場')" class="border border-cathay text-cathay py-3 rounded-xl text-sm font-medium hover:bg-cathay-light transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-plane-departure"></i> 去機場
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="h-64 bg-gray-200 rounded-2xl flex items-center justify-center text-gray-400 relative overflow-hidden group cursor-pointer" @click="openGoogleMapsSearch">
-                   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Google_Maps_Logo_2020.svg/512px-Google_Maps_Logo_2020.svg.png" class="w-16 h-16 opacity-50 mb-2">
-                   <p class="absolute bottom-4 text-xs font-bold">點擊開啟 Google Maps App</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <button @click="openGoogleMapsNav('Hotel')" class="bg-white p-4 rounded-xl shadow-sm text-center text-cathay font-bold text-sm"><i class="fa-solid fa-hotel mb-2 block text-xl"></i>回飯店</button>
+                    <button @click="openGoogleMapsNav('Airport')" class="bg-white p-4 rounded-xl shadow-sm text-center text-cathay font-bold text-sm"><i class="fa-solid fa-plane mb-2 block text-xl"></i>去機場</button>
                 </div>
             </div>
 
             <div v-if="activeTab === 'accounting'" class="space-y-4">
-                <div class="bg-white rounded-2xl p-5 shadow-sm">
-                    <h3 class="font-bold text-muji-text mb-4">新增支出</h3>
-                    <div class="space-y-3">
-                        <input v-model="newExpense.item" placeholder="項目名稱 (例: 拉麵)" class="w-full bg-gray-50 border-0 rounded-lg p-3 text-sm">
-                        
-                        <div class="flex gap-3">
-                            <input v-model.number="newExpense.amount" type="number" placeholder="金額" class="w-2/3 bg-gray-50 border-0 rounded-lg p-3 text-sm">
-                            
-                            <select v-model="newExpense.method" class="w-1/3 bg-gray-50 border-0 rounded-lg p-3 text-sm text-gray-600">
-                                <option value="現金">現金</option>
-                                <option value="信用卡">信用卡</option>
-                                <option value="提款卡">提款卡</option>
-                            </select>
-                        </div>
-
-                        <button @click="addExpense" class="w-full bg-cathay text-white py-3 rounded-xl shadow-lg shadow-cathay/30 font-medium active:scale-95 transition">
-                            記下一筆
-                        </button>
-                    </div>
+                <div class="bg-cathay rounded-2xl p-6 text-white shadow-lg shadow-cathay/30">
+                    <p class="text-sm opacity-80 mb-1">總支出 (HKD)</p>
+                    <p class="text-4xl font-bold font-mono">$ {{ totalExpense.toLocaleString() }}</p>
                 </div>
 
-                <div class="bg-white rounded-2xl p-5 shadow-sm">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-muji-text">消費紀錄</h3>
-                        <span class="text-cathay font-bold text-lg">${{ totalExpense }}</span>
+                <div class="bg-white rounded-2xl p-4 shadow-sm space-y-3">
+                    <input v-model="newExpense.item" placeholder="消費項目" class="w-full bg-gray-50 p-3 rounded-lg text-sm outline-none">
+                    <div class="flex gap-2">
+                        <div class="relative w-2/3">
+                            <span class="absolute left-3 top-3 text-gray-500">$</span>
+                            <input v-model.number="newExpense.amount" type="number" placeholder="0.00" class="w-full bg-gray-50 p-3 pl-6 rounded-lg text-sm outline-none">
+                        </div>
+                        <select v-model="newExpense.method" class="w-1/3 bg-gray-50 p-3 rounded-lg text-sm text-gray-600 outline-none">
+                            <option value="現金">現金</option>
+                            <option value="信用卡">信用卡</option>
+                        </select>
                     </div>
-                    
-                    <div v-if="expenses.length === 0" class="text-center text-gray-400 text-sm py-4">暫無資料</div>
-                    
-                    <ul class="divide-y divide-gray-100">
-                        <li v-for="(exp, i) in expenses" :key="i" class="py-3 flex justify-between items-center">
+                    <button @click="addExpense" class="w-full bg-cathay text-white py-3 rounded-xl font-bold text-sm">記帳</button>
+                </div>
+
+                <div class="bg-white rounded-2xl p-4 shadow-sm">
+                    <h3 class="font-bold text-muji-text mb-3">明細</h3>
+                    <ul class="space-y-3">
+                        <li v-for="(exp, i) in expenses" :key="i" class="flex justify-between items-center border-b border-gray-50 pb-2 last:border-0">
                             <div>
-                                <p class="text-sm font-medium text-gray-800">{{ exp.item }}</p>
-                                <span class="text-xs text-white px-2 py-0.5 rounded-full" 
-                                      :class="{'bg-green-500': exp.method==='現金', 'bg-blue-500': exp.method==='信用卡', 'bg-purple-500': exp.method==='提款卡'}">
-                                    {{ exp.method }}
-                                </span>
+                                <p class="font-medium text-gray-800">{{ exp.item }}</p>
+                                <span class="text-xs text-gray-400">{{ exp.method }}</span>
                             </div>
-                            <span class="font-mono text-gray-600">${{ exp.amount }}</span>
+                            <div class="flex items-center gap-3">
+                                <span class="font-mono font-bold text-gray-700">$ {{ exp.amount }}</span>
+                                <i @click="deleteExpense(i)" class="fa-solid fa-xmark text-gray-300 cursor-pointer p-1"></i>
+                            </div>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <div v-if="activeTab === 'shopping'" class="space-y-4">
-                
-                <div class="flex bg-white p-1 rounded-xl shadow-sm mb-4">
-                    <button @click="listMode = 'buy'" :class="{'bg-cathay text-white shadow-md': listMode === 'buy', 'text-gray-500': listMode !== 'buy'}" class="flex-1 py-2 rounded-lg text-sm font-medium transition-all">購物清單</button>
-                    <button @click="listMode = 'pack'" :class="{'bg-cathay text-white shadow-md': listMode === 'pack', 'text-gray-500': listMode !== 'pack'}" class="flex-1 py-2 rounded-lg text-sm font-medium transition-all">行李核對</button>
+            <div v-if="activeTab === 'info'" class="space-y-4">
+                <div class="flex bg-white p-1 rounded-xl shadow-sm mb-2">
+                    <button @click="infoMode = 'list'" :class="infoMode === 'list' ? 'bg-cathay text-white shadow' : 'text-gray-500'" class="flex-1 py-2 rounded-lg text-sm font-medium transition">行前清單</button>
+                    <button @click="infoMode = 'dest'" :class="infoMode === 'dest' ? 'bg-cathay text-white shadow' : 'text-gray-500'" class="flex-1 py-2 rounded-lg text-sm font-medium transition">目的地資訊</button>
                 </div>
 
-                <div v-if="listMode === 'buy'" class="bg-white rounded-2xl p-5 shadow-sm min-h-[300px]">
-                    <div class="flex gap-2 mb-4">
-                        <input v-model="newItem" @keyup.enter="addShopItem" placeholder="想買什麼..." class="flex-1 bg-gray-50 border-0 rounded-lg p-3 text-sm">
-                        <button @click="addShopItem" class="bg-cathay text-white w-10 rounded-lg flex items-center justify-center"><i class="fa-solid fa-plus"></i></button>
+                <div v-if="infoMode === 'list'" class="bg-white rounded-2xl p-5 shadow-sm min-h-[400px]">
+                    <div class="flex gap-2 mb-4 border-b border-gray-100 pb-4">
+                        <input v-model="newCheckItem" @keyup.enter="addCheckItem" placeholder="新增物品 (例如: 轉接頭)" class="flex-1 bg-gray-50 rounded-lg px-3 py-2 text-sm outline-none">
+                        <button @click="addCheckItem" class="bg-cathay text-white w-10 rounded-lg"><i class="fa-solid fa-plus"></i></button>
                     </div>
-                    <ul class="space-y-2">
-                        <li v-for="(item, i) in shoppingList" :key="i" class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg">
-                            <input type="checkbox" v-model="item.done" class="w-5 h-5 accent-cathay rounded cursor-pointer">
-                            <span :class="{'line-through text-gray-300': item.done}" class="text-gray-700">{{ item.name }}</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div v-if="listMode === 'pack'" class="bg-white rounded-2xl p-5 shadow-sm">
-                    <h3 class="font-bold text-muji-text mb-3">出發前檢查</h3>
-                    <div class="space-y-4">
-                        <div v-for="(category, catName) in packingList" :key="catName">
-                            <h4 class="text-xs font-bold text-cathay uppercase mb-2">{{ catName }}</h4>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div v-for="(item, i) in category" :key="i" 
-                                     @click="item.checked = !item.checked"
-                                     :class="{'bg-cathay text-white': item.checked, 'bg-gray-50 text-gray-600': !item.checked}"
-                                     class="p-3 rounded-xl text-sm cursor-pointer transition-all duration-200 flex items-center justify-between shadow-sm border border-transparent select-none">
-                                    {{ item.name }}
-                                    <i v-if="item.checked" class="fa-solid fa-check text-xs"></i>
+                    
+                    <div class="space-y-2">
+                        <div v-for="(item, i) in checklist" :key="i" class="flex items-center justify-between group">
+                            <label class="flex items-center gap-3 cursor-pointer select-none flex-1 py-2">
+                                <div :class="item.checked ? 'bg-cathay border-cathay' : 'border-gray-300 bg-white'" class="w-5 h-5 border-2 rounded flex items-center justify-center transition-colors">
+                                    <i v-if="item.checked" class="fa-solid fa-check text-white text-xs"></i>
                                 </div>
-                            </div>
+                                <span :class="item.checked ? 'line-through text-gray-400' : 'text-gray-700'">{{ item.name }}</span>
+                            </label>
+                            <i @click="deleteCheckItem(i)" class="fa-solid fa-trash-can text-gray-200 hover:text-red-400 cursor-pointer px-2"></i>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div v-if="activeTab === 'hotel'" class="space-y-4">
-                <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" class="w-full h-48 object-cover">
-                    <div class="p-5">
-                        <h2 class="text-xl font-bold text-muji-text">無印銀座飯店</h2>
-                        <p class="text-sm text-gray-500 mb-4">Tokyo, Ginza</p>
-                        
-                        <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div class="bg-gray-50 p-3 rounded-xl text-center">
-                                <p class="text-xs text-gray-400">Check-in</p>
-                                <p class="font-bold text-cathay">15:00</p>
-                            </div>
-                            <div class="bg-gray-50 p-3 rounded-xl text-center">
-                                <p class="text-xs text-gray-400">Check-out</p>
-                                <p class="font-bold text-cathay">11:00</p>
-                            </div>
-                        </div>
-
-                        <div class="space-y-3">
-                            <button @click="directNavigate('Muji Hotel Ginza')" class="w-full bg-cathay text-white py-3 rounded-xl flex items-center justify-center gap-2 font-medium">
-                                <i class="fa-solid fa-location-arrow"></i> 導航至飯店
-                            </button>
-                            <a href="tel:+81312345678" class="block w-full bg-white border border-gray-200 text-gray-600 py-3 rounded-xl flex items-center justify-center gap-2 font-medium">
-                                <i class="fa-solid fa-phone"></i> 撥打電話
-                            </a>
-                        </div>
+                <div v-if="infoMode === 'dest'" class="space-y-4">
+                    <div class="bg-white rounded-2xl p-5 shadow-sm">
+                        <h3 class="font-bold text-lg mb-2 text-cathay">目的地筆記</h3>
+                        <textarea v-model="destinationNote" placeholder="輸入當地的報案電話、飯店地址、交通卡資訊等..." class="w-full h-40 bg-gray-50 border-0 rounded-xl p-3 text-sm leading-relaxed outline-none resize-none"></textarea>
+                        <p class="text-xs text-gray-400 mt-2 text-right">自動儲存中...</p>
                     </div>
                 </div>
             </div>
 
         </main>
 
-        <nav class="bg-white border-t border-gray-100 px-6 py-3 flex justify-between items-center text-xs font-medium z-20 pb-safe">
-            <button @click="activeTab = 'itinerary'" :class="activeTab === 'itinerary' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition">
-                <i class="fa-solid fa-calendar-days text-xl"></i> 行程
-            </button>
-            <button @click="activeTab = 'map'" :class="activeTab === 'map' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition">
-                <i class="fa-solid fa-map-location-dot text-xl"></i> 地圖
-            </button>
-            <button @click="activeTab = 'accounting'" :class="activeTab === 'accounting' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition">
-                <div class="bg-cathay/10 w-10 h-10 rounded-full flex items-center justify-center mb-1">
-                    <i class="fa-solid fa-yen-sign text-lg" :class="activeTab === 'accounting' ? 'text-cathay' : 'text-gray-400'"></i>
-                </div>
-            </button>
-            <button @click="activeTab = 'shopping'" :class="activeTab === 'shopping' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition">
-                <i class="fa-solid fa-bag-shopping text-xl"></i> 購物
-            </button>
-            <button @click="activeTab = 'hotel'" :class="activeTab === 'hotel' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center gap-1 w-12 transition">
-                <i class="fa-solid fa-bed text-xl"></i> 住宿
-            </button>
+        <nav class="bg-white border-t border-gray-200 pb-safe z-30">
+            <div class="grid grid-cols-4 h-16">
+                <button @click="activeTab = 'itinerary'" :class="activeTab === 'itinerary' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center justify-center gap-1 transition-colors">
+                    <i class="fa-solid fa-calendar-days text-xl"></i>
+                    <span class="text-[10px] font-medium">行程</span>
+                </button>
+                <button @click="activeTab = 'map'" :class="activeTab === 'map' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center justify-center gap-1 transition-colors">
+                    <i class="fa-solid fa-map-location-dot text-xl"></i>
+                    <span class="text-[10px] font-medium">地圖</span>
+                </button>
+                <button @click="activeTab = 'accounting'" :class="activeTab === 'accounting' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center justify-center gap-1 transition-colors">
+                    <i class="fa-solid fa-sack-dollar text-xl"></i>
+                    <span class="text-[10px] font-medium">記帳</span>
+                </button>
+                <button @click="activeTab = 'info'" :class="activeTab === 'info' ? 'text-cathay' : 'text-gray-400'" class="flex flex-col items-center justify-center gap-1 transition-colors">
+                    <i class="fa-solid fa-suitcase-rolling text-xl"></i>
+                    <span class="text-[10px] font-medium">行前</span>
+                </button>
+            </div>
         </nav>
+
+        <div v-if="showTripSettings" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl">
+                <h3 class="text-xl font-bold mb-4 text-cathay">旅程設定</h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-xs font-bold text-gray-500">目的地名稱</label>
+                        <input v-model="editTripData.name" placeholder="例如：東京自由行" class="w-full border-b-2 border-gray-200 py-2 outline-none focus:border-cathay">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-500">開始日期</label>
+                            <input type="date" v-model="editTripData.startDate" class="w-full border-b-2 border-gray-200 py-2 outline-none">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500">結束日期</label>
+                            <input type="date" v-model="editTripData.endDate" class="w-full border-b-2 border-gray-200 py-2 outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500">航班代碼 (選填)</label>
+                        <input v-model="editTripData.flightCode" placeholder="例如：CX450" class="w-full border-b-2 border-gray-200 py-2 outline-none focus:border-cathay uppercase">
+                    </div>
+                </div>
+                <div class="mt-6 flex gap-3">
+                    <button @click="showTripSettings = false" class="flex-1 py-2 text-gray-500">取消</button>
+                    <button @click="saveTrip" class="flex-1 bg-cathay text-white rounded-lg py-2 font-bold shadow-lg shadow-cathay/30">儲存旅程</button>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="showAddEvent" class="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center sm:p-4">
+            <div class="bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-sm p-6 shadow-2xl">
+                <h3 class="text-lg font-bold mb-4">新增 {{ formatDateShort(selectedDate) }} 行程</h3>
+                <div class="space-y-3">
+                    <input v-model="newEvent.time" type="time" class="w-full bg-gray-50 p-3 rounded-lg text-sm">
+                    <input v-model="newEvent.title" placeholder="標題 (例: 淺草寺)" class="w-full bg-gray-50 p-3 rounded-lg text-sm">
+                    <input v-model="newEvent.note" placeholder="備註 (例: 記得帶御朱印帳)" class="w-full bg-gray-50 p-3 rounded-lg text-sm">
+                </div>
+                <div class="mt-4 flex gap-3">
+                    <button @click="showAddEvent = false" class="flex-1 py-3 text-gray-500 text-sm">取消</button>
+                    <button @click="addEvent" class="flex-1 bg-cathay text-white rounded-xl py-3 font-bold text-sm">新增</button>
+                </div>
+            </div>
+        </div>
 
     </div>
 
     <script>
-        const { createApp, ref, computed } = Vue;
+        const { createApp, ref, computed, watch, onMounted } = Vue;
 
         createApp({
             setup() {
+                // 狀態變數
                 const activeTab = ref('itinerary');
-                const listMode = ref('buy'); // 'buy' or 'pack'
+                const showTripSettings = ref(false);
+                const showAddEvent = ref(false);
+                const infoMode = ref('list'); // 'list' or 'dest'
                 const mapSearchQuery = ref('');
 
-                // 1. 行程表數據 (包含天氣)
-                const itinerary = ref([
-                    { date: 'Day 1 (10/12)', weather: '24°C 晴', weatherIcon: 'fa-solid fa-sun', events: ['10:00 抵達東京成田機場', '13:00 飯店 Check-in', '15:00 銀座逛街', '19:00 燒肉晚餐'] },
-                    { date: 'Day 2 (11/12)', weather: '21°C 雨', weatherIcon: 'fa-solid fa-cloud-rain', events: ['09:00 迪士尼樂園', '18:00 園區晚餐', '21:00 觀賞煙火'] },
-                    { date: 'Day 3 (12/12)', weather: '22°C 陰', weatherIcon: 'fa-solid fa-cloud', events: ['10:00 淺草寺參拜', '12:00 晴空塔午餐', '16:00 秋葉原購物'] },
-                ]);
+                // 資料持久化 Key
+                const STORAGE_KEY = 'travel_app_pro_v1';
 
-                // 3. 記帳功能
+                // 主要資料結構
+                const appData = ref({
+                    trip: null, // { name, startDate, endDate, flightCode }
+                    events: {}, // { '2025-10-12': [ {time, title, note}, ... ] }
+                    expenses: [], // [ { item, amount, method } ]
+                    checklist: [
+                        { name: '護照', checked: false },
+                        { name: '手機充電線', checked: false }
+                    ],
+                    destinationNote: ''
+                });
+
+                // 臨時變數 (Form Inputs)
+                const editTripData = ref({ name: '', startDate: '', endDate: '', flightCode: '' });
+                const selectedDate = ref('');
+                const newEvent = ref({ time: '10:00', title: '', note: '' });
                 const newExpense = ref({ item: '', amount: '', method: '現金' });
-                const expenses = ref([
-                    { item: '便利商店', amount: 850, method: '現金' },
-                    { item: 'Uniqlo', amount: 5000, method: '信用卡' },
-                ]);
-                const totalExpense = computed(() => expenses.value.reduce((sum, item) => sum + Number(item.amount), 0));
-                
+                const newCheckItem = ref('');
+
+                // 1. 初始化與儲存邏輯
+                onMounted(() => {
+                    const saved = localStorage.getItem(STORAGE_KEY);
+                    if (saved) {
+                        appData.value = JSON.parse(saved);
+                        // 初始化選中日期為旅程第一天，或今天
+                        if (appData.value.trip) {
+                            selectedDate.value = appData.value.trip.startDate;
+                            // 載入設定框的預設值
+                            editTripData.value = { ...appData.value.trip };
+                        }
+                    } else {
+                        // 首次使用開啟設定
+                        showTripSettings.value = true;
+                    }
+                });
+
+                // 自動儲存監聽
+                watch(appData, (newVal) => {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(newVal));
+                }, { deep: true });
+
+                // 2. 旅程日期計算邏輯
+                const tripDays = computed(() => {
+                    if (!appData.value.trip || !appData.value.trip.startDate || !appData.value.trip.endDate) return [];
+                    
+                    const days = [];
+                    let current = new Date(appData.value.trip.startDate);
+                    const end = new Date(appData.value.trip.endDate);
+                    const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+                    while (current <= end) {
+                        days.push({
+                            dateStr: current.toISOString().split('T')[0], // YYYY-MM-DD
+                            day: current.getDate(),
+                            weekDay: weekDays[current.getDay()]
+                        });
+                        current.setDate(current.getDate() + 1);
+                    }
+                    return days;
+                });
+
+                const saveTrip = () => {
+                    appData.value.trip = { ...editTripData.value };
+                    // 如果沒有選中日期，設為開始日期
+                    if (!selectedDate.value) selectedDate.value = editTripData.value.startDate;
+                    showTripSettings.value = false;
+                };
+
+                // 3. 單日行程邏輯
+                const currentDayEvents = computed(() => {
+                    if (!selectedDate.value) return [];
+                    const list = appData.value.events[selectedDate.value] || [];
+                    return list.sort((a, b) => a.time.localeCompare(b.time));
+                });
+
+                const addEvent = () => {
+                    if (!newEvent.value.title) return;
+                    if (!appData.value.events[selectedDate.value]) {
+                        appData.value.events[selectedDate.value] = [];
+                    }
+                    appData.value.events[selectedDate.value].push({ ...newEvent.value });
+                    showAddEvent.value = false;
+                    newEvent.value = { time: '10:00', title: '', note: '' }; // reset
+                };
+
+                const deleteEvent = (index) => {
+                    if(confirm('確定刪除此行程？')) {
+                        appData.value.events[selectedDate.value].splice(index, 1);
+                    }
+                };
+
+                // 4. 記帳邏輯
                 const addExpense = () => {
-                    if(newExpense.value.item && newExpense.value.amount) {
-                        expenses.value.push({ ...newExpense.value });
+                    if (newExpense.value.item && newExpense.value.amount) {
+                        appData.value.expenses.unshift({ ...newExpense.value }); // 加到最上面
                         newExpense.value.item = '';
                         newExpense.value.amount = '';
                     }
                 };
-
-                // 4. 購物清單
-                const newItem = ref('');
-                const shoppingList = ref([
-                    { name: '美妝藥品', done: false },
-                    { name: '抹茶粉', done: true },
-                ]);
-                const addShopItem = () => {
-                    if(newItem.value) {
-                        shoppingList.value.push({ name: newItem.value, done: false });
-                        newItem.value = '';
-                    }
-                }
-
-                // 4-1. 旅行用品清單 (分類核對)
-                const packingList = ref({
-                    '證件錢包': [
-                        { name: '護照', checked: false },
-                        { name: '現金/日幣', checked: false },
-                        { name: '信用卡', checked: false },
-                        { name: 'Sim 卡', checked: false },
-                    ],
-                    '電子產品': [
-                        { name: '充電器', checked: false },
-                        { name: '轉接頭', checked: false },
-                        { name: '行動電源', checked: false },
-                    ],
-                    '生活用品': [
-                        { name: '牙刷', checked: false },
-                        { name: '換洗衣物', checked: false },
-                    ]
+                const deleteExpense = (index) => {
+                    appData.value.expenses.splice(index, 1);
+                };
+                const totalExpense = computed(() => {
+                    return appData.value.expenses.reduce((sum, item) => sum + item.amount, 0);
                 });
 
-                // Google Maps 功能
-                const openGoogleMapsSearch = () => {
-                    const query = mapSearchQuery.value || '東京';
-                    // 使用 universal link 開啟 App
-                    window.location.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+                // 5. 清單邏輯
+                const addCheckItem = () => {
+                    if (newCheckItem.value) {
+                        appData.value.checklist.push({ name: newCheckItem.value, checked: false });
+                        newCheckItem.value = '';
+                    }
+                };
+                const deleteCheckItem = (index) => {
+                    appData.value.checklist.splice(index, 1);
                 };
 
-                const directNavigate = (destination) => {
-                    // 這裏直接開啟 Google Maps 導航模式
-                    let query = destination;
-                    if(destination === '酒店') query = 'Muji Hotel Ginza'; // 預設酒店地址
-                    if(destination === '機場') query = 'Narita International Airport';
-                    window.location.href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`;
-                }
+                // Helper
+                const formatDateShort = (dateStr) => {
+                    if (!dateStr) return '';
+                    const d = new Date(dateStr);
+                    return `${d.getMonth()+1}/${d.getDate()}`;
+                };
 
                 const currentTabName = computed(() => {
-                    const names = {
-                        'itinerary': '行程總覽',
-                        'map': '地圖導航',
-                        'accounting': '旅費記帳',
-                        'shopping': '購物與行李',
-                        'hotel': '住宿資訊'
-                    };
-                    return names[activeTab.value];
+                    const map = { itinerary: '我的行程', map: '地圖導航', accounting: '旅費記帳', info: '行前與資訊' };
+                    return map[activeTab.value];
                 });
 
+                const openGoogleMaps = () => {
+                    const q = mapSearchQuery.value || appData.value.trip?.name || '東京';
+                    window.location.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+                };
+                
+                const openGoogleMapsNav = (type) => {
+                    // 實際專案可在此加入儲存的飯店地址
+                    let q = 'Hotel'; 
+                    if(type === 'Airport') q = 'Airport';
+                    window.location.href = `https://www.google.com/maps/search/?api=1&query=${q}`;
+                };
+
                 return {
-                    activeTab, currentTabName,
-                    itinerary,
-                    newExpense, expenses, addExpense, totalExpense,
-                    listMode, newItem, shoppingList, addShopItem, packingList,
-                    mapSearchQuery, openGoogleMapsSearch, directNavigate
+                    activeTab, showTripSettings, showAddEvent, infoMode,
+                    appData, currentTrip: computed(() => appData.value.trip),
+                    editTripData, saveTrip,
+                    tripDays, selectedDate,
+                    currentDayEvents, newEvent, addEvent, deleteEvent,
+                    newExpense, expenses: computed(() => appData.value.expenses), addExpense, deleteExpense, totalExpense,
+                    newCheckItem, checklist: computed(() => appData.value.checklist), addCheckItem, deleteCheckItem, destinationNote: computed({
+                        get: () => appData.value.destinationNote,
+                        set: (val) => appData.value.destinationNote = val
+                    }),
+                    mapSearchQuery, openGoogleMaps, openGoogleMapsNav,
+                    formatDateShort, currentTabName
                 };
             }
         }).mount('#app');
